@@ -76,6 +76,7 @@ for dirpath, dirnames, filenames in os.walk(extensions_dir):
 setup(
     name = 'django-shared',
     packages=find_packages(),
+    data_files=data_files,
     version='.'.join(map(str, __import__(extensions_dir).__version__)),
     description = 'Common tools for working with Django and Python.',
     long_description = open("README.md", "r").read(),
