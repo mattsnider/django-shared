@@ -1,9 +1,13 @@
 *~
 .DS_Store
 .sass-cache
+*.coverage
+
+# build related
 *.pyc
 *.egg
-*.coverage
+*.egg-info
+build/
 
 #IDE FILES
 *.idea

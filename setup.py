@@ -59,9 +59,9 @@ packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
-extensions_dir = 'django_shared'
+package_dir = 'django_shared'
 
-for dirpath, dirnames, filenames in os.walk(extensions_dir):
+for dirpath, dirnames, filenames in os.walk(package_dir):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
         if dirname.startswith('.'):
@@ -72,12 +72,11 @@ for dirpath, dirnames, filenames in os.walk(extensions_dir):
         data_files.append(
             [dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
-
 setup(
     name = 'django-shared',
     packages=find_packages(),
     data_files=data_files,
-    version='.'.join(map(str, __import__(extensions_dir).__version__)),
+    version='.'.join(map(str, __import__(package_dir).__version__)),
     description = 'Common tools for working with Django and Python.',
     long_description = open("README.md", "r").read(),
     url = 'http://github.com/votizen/django-shared',
