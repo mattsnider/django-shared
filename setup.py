@@ -1,12 +1,7 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import codecs
-
+import os, sys
 from setuptools import setup, Command, find_packages
-
-src_dir = "django_kissmetrics"
 
 
 class RunTests(Command):
@@ -23,15 +18,13 @@ class RunTests(Command):
         testproj_dir = os.path.join(this_dir, "tests")
         os.chdir(testproj_dir)
         sys.path.append(testproj_dir)
-        from django.core.management import execute_manager
+        from django.core.management import execute_from_command_line
         os.environ["DJANGO_SETTINGS_MODULE"] = os.environ.get(
             "DJANGO_SETTINGS_MODULE", "settings")
-        settings_file = os.environ["DJANGO_SETTINGS_MODULE"]
-        settings_mod = __import__(settings_file, {}, {}, [''])
         prev_argv = list(sys.argv)
         try:
             sys.argv = [__file__, "test"] + self.extra_args
-            execute_manager(settings_mod, argv=sys.argv)
+            execute_from_command_line(argv=sys.argv)
         finally:
             sys.argv = prev_argv
 
@@ -46,17 +39,46 @@ class QuickRunTests(RunTests):
     extra_env = dict(SKIP_RLIMITS=1, QUICKTEST=1)
 
 
-if os.path.exists("README.md"):
-    long_description = codecs.open("README.md", "r", "utf-8").read()
-else:
-    long_description = "See https://github.com/mattesnider/django-shared"
+def fullsplit(path, result=None):
+    """
+    Split a pathname into components (the opposite of os.path.join) in a
+    platform-neutral way.
+    """
+    if result is None:
+        result = []
+    head, tail = os.path.split(path)
+    if head == '':
+        return [tail] + result
+    if head == path:
+        return result
+    return fullsplit(head, [tail] + result)
+
+# Compile the list of packages available, because distutils doesn't have
+# an easy way to do this.
+packages, data_files = [], []
+root_dir = os.path.dirname(__file__)
+if root_dir != '':
+    os.chdir(root_dir)
+extensions_dir = 'django_shared'
+
+for dirpath, dirnames, filenames in os.walk(extensions_dir):
+    # Ignore dirnames that start with '.'
+    for i, dirname in enumerate(dirnames):
+        if dirname.startswith('.'):
+            del dirnames[i]
+    if '__init__.py' in filenames:
+        packages.append('.'.join(fullsplit(dirpath)))
+    elif filenames:
+        data_files.append(
+            [dirpath, [os.path.join(dirpath, f) for f in filenames]])
+
 
 setup(
     name = 'django-shared',
     packages=find_packages(),
-    version='.'.join(map(str, __import__('django_shared').__version__)),
+    version='.'.join(map(str, __import__(extensions_dir).__version__)),
     description = 'Common tools for working with Django and Python.',
-    long_description = long_description,
+    long_description = open("README.md", "r").read(),
     url = 'http://github.com/votizen/django-shared',
     author = 'Matt Snider',
     author_email = 'admin@mattsnider.com',
