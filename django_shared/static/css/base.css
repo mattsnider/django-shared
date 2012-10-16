@@ -1,0 +1,74 @@
+/* @group tags */
+
+h1, .prmry {
+	font-size: 16pt;
+	font-weight: bold;
+	padding-bottom: 1em;
+}
+
+h2, .scdry {
+	font-size: 15pt;
+	padding-bottom: 1em;
+}
+
+h3, .wprmry {
+	font-size: 13pt;
+	font-weight: bold;
+	padding-bottom: 1em;
+}
+
+h4, .wscdry {
+	font-size: 12pt;
+	padding-bottom: 1em;
+}
+
+body {
+	line-height: 1.6em;
+	text-align: left;
+}
+
+a,
+p,
+label {
+	font-size: 11pt;
+	text-decoration: none;
+}
+
+/* @end */
+
+/* @group Clearfix */
+
+.clrfx:after, .clear {
+/* (en) clearfix method for clearing floats */
+	content: ".";
+	display: block;	
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.clrfx {
+/* (en) essential for Safari browser !! */
+	clear: both;
+	display: block;
+}
+
+/* @end */
+
+/* @group misc */
+
+.dnone {
+	display: none;
+}
+
+.vhddn {
+	visibility: hidden;
+}
+
+div.spacer {
+	clear: both;
+	height: 0.5em;
+	width: 100%;
+}
+
+/* @end */

@@ -1,0 +1,129 @@
+form, .form {
+  dl {
+    width: 100%;
+  }
+  dt {
+    width: 100%;
+  }
+  dd {
+    margin: 0;
+    padding-bottom: 1em;
+    width: 100%;
+  }
+  .textarea,
+  .input,
+  textarea,
+  input {
+    width: 97%;
+  }
+  label, .label {
+    color: #333;
+    cursor: pointer;
+    font-weight: bold;
+  }
+}
+
+hr.divider, .hr_divider {
+  border: 0;
+  height: 1px;
+  background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+  background-image: -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+  background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+  background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+}
+
+.hr_divider {
+  border-color: #CCCCCC -moz-use-text-color -moz-use-text-color;
+  border-right: 0 none;
+  border-style: solid none none;
+  border-width: 1px 0 0;
+  display: block;
+  height: 1px;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.helptext {
+  color: #666;
+  font-size: small;
+  font-style: italic;
+  line-height: 1.2em;
+}
+
+/* @group fields */
+
+.error {
+	input, select, textarea {
+		border-color: #FFCC00 !important;
+		@include box-shadow(#888, 3px 3px 1px);
+	}
+}
+
+textarea, .text, .textarea, input {
+  font-family: Verdana,Tahoma,Arial,sans-serif;
+  font-size: 10pt;
+  line-height: normal;
+  padding: 0.2em;
+}
+
+textarea, .text, .textarea, input:not([type="file"]) {
+    border: 1px solid #444444;
+
+	@include box-shadow(#888, 1px 1px 1px);
+
+	&:focus, &:hover {
+		@include box-shadow(#69c);
+	}
+}
+
+input[type~="radio"], .chk {
+    border: 0 none;
+}
+
+/* @end */
+
+/* @group errors */
+
+.errorlist li {
+	background-color: #FFFF80;
+    border: 1px solid #900;
+	font-size: 11pt;
+    margin: 0.5em 0;
+    padding: 0.5em 1em;
+	@include box-shadow();
+}
+
+/* @end */
+
+/* @group buttons */
+
+.buttons {
+	text-align: right;
+}
+
+.button {
+	background-color: #F0F0F0;
+    display:inline-block;
+
+    margin: 0 1em 0 0;
+    border: 1px solid #e8e8e8;
+	
+    padding: 0.25em 1em;
+    text-decoration:none;
+	@include border-radius(0.5em);
+	@include box-shadow();
+}
+
+.button span {
+	font-size: 11pt;
+}
+
+.button-large {
+    padding: 2em 1em 1em;
+}
+
+.button:hover {
+	@include box-shadow(#69c);
+}
+
+/* @end */

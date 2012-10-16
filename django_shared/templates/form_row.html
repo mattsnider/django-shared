@@ -1,0 +1,6 @@
+{% load common text_filters %}{% spaceless %}
+<dt class="{{ CLS }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></dt>
+<dd class="{{ CLS }}">
+	{{ field }}
+	{% if field.errors %}{{ field.errors }}{% endif %}
+</dd>{% endspaceless %}

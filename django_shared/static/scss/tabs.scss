@@ -1,0 +1,52 @@
+/* @group generic tabs */
+
+.tabs-gray ul.tabs {
+  a:hover {
+    background: #EFEFEF;
+  }
+
+  .selected {
+    background-color: #EFEFEF;
+    border-bottom: 1px solid #EFEFEF;
+  }
+}
+
+ul.tabs {
+  border-bottom: 1px solid #89CFF0;
+  font-weight: bold;
+  list-style-type: none;
+  margin: 0;
+  padding-bottom: 28px;
+
+  li {
+    background-color: rgba(137, 207, 240, .2);
+    border: 1px solid #89CFF0;
+    float: left;
+    height: 26px;
+    line-height: 26px;
+    margin: 2px 2px 0 2px;
+  }
+
+  a {
+    color: #666;
+    display: block;
+    float: left;
+    padding: 4px;
+    text-decoration: none;
+
+    &:active {
+      color: #000;
+    }
+
+    &:hover {
+      background: #fff;
+    }
+  }
+
+  .selected {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+  }
+}
+
+/* @end */

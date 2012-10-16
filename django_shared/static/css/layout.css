@@ -1,0 +1,82 @@
+/* @group general */
+
+#doc {
+	margin: 0.5em auto;
+	overflow: hidden;
+	width: 94.5em;
+}
+
+#hder {
+	border-bottom: 1px solid #333;
+}
+
+#hder .nav {
+	float: right;
+}
+
+#hder a {
+	margin: 0 0.5em;
+}
+
+#main {
+	/*background: #EFEFEF url(../images/bg/elastic.gif) 21em 10 repeat-y;*/
+	/*background-color: #EFEFEF;*/
+}
+
+#fter {
+	border-top: solid 1px #000;
+    clear: both;
+    /*margin-bottom: -1.5em;*/
+    padding-top: 1em;
+}
+
+#fter .nav {
+	text-align: center;
+}
+
+#fter a {
+	padding: 0.25em;
+}
+
+#fter p {
+	padding-top: 0.5em;
+	text-align: center;
+}
+
+/* @end */
+
+/* @group one column */
+
+.mhder {
+	padding-top: 1em;
+}
+
+.mmain {
+	background-color: #EFEFEF;
+}
+
+.mfter {
+	
+}
+
+/* @end */
+
+/* @group two column */
+
+.aside {
+	float: left;
+    width: 25%;
+}
+
+.aside div.links a {
+	display: block;
+}
+
+.content {
+	background-color: #FFF;
+	float: right;
+    min-height: 60em;
+    width: 73%;
+}
+
+/* @end */

@@ -1,0 +1,29 @@
+// colors used throughout the site
+
+$blue: #249ac1;
+$red: #a9113f;
+
+$text-dark: #111c24;
+$text-medium: #342b2a;
+$text-light: #d7d2cb;
+
+$brown-dark: #3d3524;
+$brown-medium: #342b2a;
+$brown-light: #d7d2cb;
+
+$highlight: rgba(254, 227, 132, 0.4);
+
+// typefaces used throughout the site
+
+$fonts: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+$light-fonts: "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", $fonts;
+$medium-fonts: "HelveticaNeueMedium", "HelveticaNeue-Medium", "Helvetica Neue Medium", $fonts;
+$bold-fonts: "HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", $fonts;
+
+$fonts-amp: Baskerville, Palatino, "Book Antiqua", serif;
+$fonts-serif: georgia, 'times new roman', times, serif;
+$fonts-rounded: 'Arial Rounded MT bold', Arial, Helvetica, sans-serif;
+
+
+// images
+$sprite: url(../images/sprite.png);

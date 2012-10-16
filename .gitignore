@@ -1,0 +1,10 @@
+*~
+.DS_Store
+.sass-cache
+*.pyc
+*.egg
+*.coverage
+
+#IDE FILES
+*.idea
+*.iml

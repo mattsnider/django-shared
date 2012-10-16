@@ -1,0 +1,207 @@
+/* @group general */
+
+body {
+}
+
+#doc, .doc {
+	margin: 0 auto; /* center in viewport */
+	overflow: hidden;
+    width: 960px;
+}
+
+nav {
+
+  /* IE10 */
+  background-image: -ms-radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
+
+  /* Mozilla Firefox */
+  background-image: -moz-radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
+
+  /* Opera */
+  background-image: -o-radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
+
+  /* Webkit (Safari/Chrome 10) */
+  background-image: -webkit-gradient(radial, center center, 0, center center, 143, color-stop(0, #2A547C), color-stop(1, #234566));
+
+  /* Webkit (Chrome 11+) */
+  background-image: -webkit-radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
+
+  /* Proposed W3C Markup */
+  background-image: radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
+
+  a {
+    border-right: 1px solid gray;
+    color: #FFF;
+    padding: 0 1em;
+  }
+
+  a:visited {
+    color: #FFF;
+  }
+
+  a.last {
+    border-right: none;
+  }
+
+  &.main-nav {
+    form {
+      float: right;
+      padding-right: 1em;
+    }
+
+    input {
+      width: 15em;
+
+      &[type=submit] {
+        width: 5em;
+      }
+    }
+  }
+
+  &.login {
+    border-bottom: 1px solid #333;
+    position: relative;
+
+    .doc {
+      text-align: right;
+    }
+  }
+}
+
+#hder {
+  border-bottom: 1px solid #333;
+}
+
+#homelink {
+  display: block;
+}
+
+#main {
+	/*background: #EFEFEF url(../images/bg/elastic.gif) 21em 10 repeat-y;*/
+	/*background-color: #EFEFEF;*/
+}
+
+#fter {
+  border-top: solid 1px #000;
+  clear: both;
+  padding-top: 1em;
+
+  .nav {
+    text-align: center;
+  }
+
+  a {
+    padding: 0.25em;
+  }
+
+  p: {
+    padding-top: 0.5em;
+    text-align: center;
+  }
+}
+
+/* @end */
+
+/* @group container */
+
+.container {
+  background-color: #EFEFEF;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.5em;
+  padding: 1em;
+
+  .content {
+    background-color: #FFF;
+    padding: 0.75em;
+  }
+
+  div.content dl {
+    margin: 0;
+  }
+
+  span.edit {
+    float: right;
+  }
+}
+
+.container-last {
+  margin-bottom: 0!important;
+}
+
+/* @end */
+
+/* @group breadcrumbs */
+
+.breadcrumbs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a {
+    font-size: 9pt;
+  }
+}
+
+.breadcrumbs-right {
+  float: right;
+  margin-top: -0.5em;
+}
+
+/* @end */
+
+/* @group errors */
+
+.errorlist {
+  list-style: none;
+  padding: 0;
+  width: 98%;
+}
+
+/* @end */
+
+/* @group columns */
+
+.column {
+  float: left;
+}
+
+.column_2a {
+  width: 25%;
+}
+
+.column_2b {
+  margin-left: 1.95%;
+  width: 73%;
+}
+
+/* @end */
+
+/* @group one column */
+
+.mhder {
+	padding-top: 1em;
+}
+
+.mmain {
+
+}
+
+.mfter {
+	
+}
+
+/* @end */
+
+/* @group messages */
+
+.messages {
+  margin: 0;
+  padding: 0;
+
+  li.message {
+    list-style: none;
+  }
+}
+
+/* @end */
