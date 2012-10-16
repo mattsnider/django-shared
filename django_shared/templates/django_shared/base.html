@@ -52,6 +52,8 @@
 		<div id="mask" class="dnone"></div>
 	</div>
 
+    {% block doc_wrapper_top %}{% endblock %}
+
 	<div id="doc">
 
 		<div id="hder">
@@ -59,6 +61,7 @@
 		</div>
 
 		<div id="main">
+            {% block main_nav %}{% endblock %}
             {% if messages %}<ul class="messages">{% for message in messages %}
                 <li class="message {% if message.tags %}{{ message.tags }}{% endif %}">
                     {{ message|safe }}</li>
@@ -72,15 +75,19 @@
 
 	</div>
 
-    <!-- JS -->
-    <script src="{{ STATIC_URL }}js/libs/jquery-1.8.2.min.js"></script>
+    {% block doc_wrapper_bottom %}{% endblock %}
 
-	<script type="text/javascript">
-		var __CONSTANTS__ = {
-			STATIC_URL: '{{ STATIC_URL }}',
-			USER_ID: '{{ user.pk }}'
-		};
-	</script>
+    <script type="text/javascript">
+        var __CONSTANTS__ = {
+            STATIC_URL: '{{ STATIC_URL }}',
+            USER_ID: '{{ user.pk }}'
+        };
+    </script>
+
+    <!-- JS -->
+    {% block script_library %}
+    <script src="{{ STATIC_URL }}js/libs/jquery-1.8.2.min.js"></script>
+    {% endblock %}
 
     {% include 'django_shared/ga.html' %}
     {% block extra_scripts %}{% endblock %}
