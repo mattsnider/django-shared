@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from contrib.form.forms import FormBase
+from django_shared.form.forms import FormBase
 
 __author__ = 'mattesnider'
 import logging

@@ -1,6 +1,6 @@
 from django.http import Http404
 
-from contrib.form.forms import FormFormat
+from django_shared.form.forms import FormFormat
 
 def get_mime_type(sFormat):
     """Returns the appropriate format for the response"""

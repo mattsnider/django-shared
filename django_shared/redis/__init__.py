@@ -3,7 +3,7 @@ __author__ = 'mattesnider'
 from django.conf import settings
 from django.core import signals
 
-from contrib.redis.utils import ConnectionHandler
+from django_shared.redis.utils import ConnectionHandler
 
 connections = ConnectionHandler(settings.REDISES)
 
