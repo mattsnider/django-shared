@@ -1,67 +1,68 @@
 from optparse import make_option
-from os import path, system
+import os
 
+from django.contrib.staticfiles import finders
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.utils.importlib import import_module
+from django.utils.datastructures import SortedDict
+
 
 class Command(BaseCommand):
     """
-    Run sass against all files SCSS files specified as `SASS_TO_CSS` in your settings.
-        See SaSS documentation for more details http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html
+    Run Sass against all files. By default it will search in /static/scss/,
+    but it can also look into /static/sass/. For more details see:
+        http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html
     """
-    help = 'Run sass against all files SCSS files specified as `SASS_TO_CSS` in your settings.'
+    help = 'Run Sass against all related files.'
 
     option_list = BaseCommand.option_list + (
         make_option('-s', '--style', action='store', dest='style', default='compressed',
             choices = ('nested', 'expanded', 'compact', 'compressed'),
-            help='SaSS style options'
-        ),
+            help='SaSS style options'),
         make_option('--file_ext', action='store', dest='file_ext', default='scss',
             choices = ('scss', 'sass'),
-            help='The file extension to use, .scss or .sass',
-        ),
-    )
+            help='The file extension to use, .scss or .sass'),
+        make_option('-a', '--app', action='store', dest='app', default='',
+            help='The app to sassify. Default is all apps.'))
 
     def handle(self, *args, **options):
         """
-        Combines all SaSS files in the SASS_TO_CSS list:
-            Expects files to be in {APP_NAME}/static/scss/{FILE_NAME}.scss
-            You can specify on file per app or an list of files per app
-            You can the name of the outputted CSS by specifying an optional third argument to your tuple
-            If a list is specified for the SCSS files, and you want to rename the file,
-                then a list of the same length must be specified for CSS names
-            The list should be a tuple:
-                [
-                    ('app_name', 'file_name'), # single file
-                    ('app_name', ['file_name1', 'file_name2', ...]), # collection of files
-                    ('app_name', 'file_name', 'css_file_name'), # single file, renaming the CSS file
-                    ('app_name', ['file_name1', 'file_name2', ...], ['css_file_name1', 'css_file_name2', ...]), # collection of files, renaming the CSS files
-                ]
+        Searches each app for static/(scss|sass)/filename.(scss|sass) files
+        and executes Sass against them.
         """
-        if not getattr(settings, 'SASS_TO_CSS'):
-            raise CommandError('settings value SASS_TO_CSS is required')
-
-        root_dir = path.join(path.dirname(path.realpath(__file__)),
-            '..', '..', '..')
-
         cmd = 'sass --update %%s:%%s --style %s --trace' % options.get('style')
-        file_ext = options.get('file_ext')
+        file_ext = options['file_ext']
+        app = options['app']
 
         self.stdout.write('Starting sass_to_css\n')
-        for app_name, file_or_files in settings.SASS_TO_CSS:
-            self.stdout.write('Processing %s:\n' % app_name)
+        for app_name in settings.INSTALLED_APPS:
+            if not app or app == app_name:
+                mod = import_module(app_name)
+                self.stdout.write('Processing %s:\n' % app_name)
 
-            for filename in [file_or_files] if isinstance(file_or_files, (str, unicode,)) else file_or_files:
-                # read data from file
-                from_file = path.join(root_dir, app_name, 'static/scss',
-                    '%s.%s' % (filename, file_ext))
+                try:
+                    # test if the scss directory exists
+                    sass_path = os.path.join(
+                        mod.__path__[0], 'static', file_ext)
 
-                # write data to file
-                to_file = path.join(root_dir, app_name, 'static/css',
-                    '%s.css' % filename)
+                    for dirpath, dirnames, filenames in os.walk(sass_path):
+                        for filename in filenames:
+                            if '.%s' % file_ext not in filename:
+                                continue
+                                # read data from file
+                            from_file = os.path.join(dirpath, filename)
 
-                # sassify
-                system(cmd % (from_file, to_file,))
+                            # write data to file
+                            to_file = os.path.join(
+                                dirpath.replace(file_ext, 'css'),
+                                filename.replace(file_ext, 'css'))
 
-                self.stdout.write('Process %s to %s:\n' % (from_file, to_file,))
+                            # sassify
+                            os.system(cmd % (from_file, to_file,))
+
+                            self.stdout.write('Process %s to %s:\n' % (
+                                from_file, to_file,))
+                except IOError:
+                    pass
         self.stdout.write('Completed sass_to_css!\n')

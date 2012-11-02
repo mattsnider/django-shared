@@ -30,7 +30,6 @@ Roadmap
 Here is a list of a few things I will be working on over the next couple months:
 
 * Test coverage
-* Improvements to management command sass_to_css
 * Upgrading boilerplate
 * SaSS/CSS review
 
