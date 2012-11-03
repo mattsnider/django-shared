@@ -14,24 +14,30 @@
 ul.tabs {
   border-bottom: 1px solid #89CFF0;
   font-weight: bold;
+  min-height: 26px;
   list-style-type: none;
-  margin: 0;
-  padding-bottom: 28px;
+  margin: 0.5em 0 0;
 
   li {
     background-color: rgba(137, 207, 240, .2);
     border: 1px solid #89CFF0;
+    border-right-width: 0;
     float: left;
-    height: 26px;
-    line-height: 26px;
-    margin: 2px 2px 0 2px;
+    height: 25px;
+    line-height: 25px;
+    margin-bottom: -1px;
+
+    &.last {
+      border-right-width: 1px;
+    }
   }
 
   a {
     color: #666;
     display: block;
     float: left;
-    padding: 4px;
+    line-height: 1.8em;
+    padding: 0 0.5em;
     text-decoration: none;
 
     &:active {
@@ -46,6 +52,9 @@ ul.tabs {
   .selected {
     background-color: #fff;
     border-bottom: 1px solid #fff;
+    height: 27px;
+    line-height: 27px;
+    margin-top: -2px;
   }
 }
 
