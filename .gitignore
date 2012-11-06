@@ -1,14 +1,20 @@
+# OS files
 *~
 .DS_Store
-.sass-cache
+
+# IDE files
+.idea
+*.iml
+
+# python files
+*.pyc
 *.coverage
 
-# build related
-*.pyc
+# build files
 *.egg
-*.egg-info
+MANIFEST
+dist/
 build/
 
-#IDE FILES
-*.idea
-*.iml
+# 3rd-party files
+.sass-cache

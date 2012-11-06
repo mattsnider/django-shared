@@ -1,0 +1,8 @@
+v1.2.2, 11/6/2012 -- Breaking release
+* upgraded to html5boilerplate 4.0.1
+* cleaning up the HTML scaffolding to use HTML 5 better
+* improving packaging.
+
+v1.2.1, 11/2/2012 -- Style improvements and upgraded sass_to_css management command to automatically find Sass files.
+
+v1.1.1, 10/16/2012 -- Initial release.

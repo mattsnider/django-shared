@@ -8,14 +8,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>{% block title %}{% endblock %}</title>
-    <meta name="description" content="{% block description %}{% endblock %}">
 
     <meta name="viewport" content="width=device-width">
 
-    <meta content="{{ META_KEYWORDS }}"
+    <meta content="{% block keywords %}{% endblock %}"
           name="keywords"/>
-    <meta content="{{ META_DESCRIPTION }}" name="description" />
+    <meta content="{% block description %}{% endblock %}" name="description" />
 
+    {% if settings.GOOGLE_SITE_VERIFICATION %}
+    {# todo: document what this is #}
+    <meta name="google-site-verification" content="{{ settings.GOOGLE_SITE_VERIFICATION }}"/>
+    {% endif %}
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/libs/normalize.css">
@@ -56,10 +59,11 @@
     {% block doc_wrapper_top %}{% endblock %}
 
 	<div id="doc">
-
-		<div id="hder">
-			{% block header %}{% endblock %}
-		</div>
+        {% block header %}
+            <header>
+                {# example HTML #}
+            </header>
+        {% endblock %}
 
 		<div id="main">
             {% block main_nav %}{% endblock %}
@@ -67,12 +71,12 @@
                 <li class="message {% if message.tags %}{{ message.tags }}{% endif %}">
                     {{ message|safe }}</li>
             {% endfor %}</ul>{% endif %}
-            {% block content %}{% endblock %}
+            {% block main_content %}{% endblock %}
         </div>
 
-		<div id="fter">
-            {% block footer %}{% endblock %}
-		</div>
+        {% block footer %}<footer class="clearer">
+            {# example HTML #}
+        </footer>{% endblock %}
 
 	</div>
 
