@@ -9,65 +9,6 @@ body {
     width: 960px;
 }
 
-nav {
-
-  /* IE10 */
-  background-image: -ms-radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
-
-  /* Mozilla Firefox */
-  background-image: -moz-radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
-
-  /* Opera */
-  background-image: -o-radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
-
-  /* Webkit (Safari/Chrome 10) */
-  background-image: -webkit-gradient(radial, center center, 0, center center, 143, color-stop(0, #2A547C), color-stop(1, #234566));
-
-  /* Webkit (Chrome 11+) */
-  background-image: -webkit-radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
-
-  /* Proposed W3C Markup */
-  background-image: radial-gradient(center, ellipse closest-side, #2A547C 0%, #234566 100%);
-
-  a {
-    border-right: 1px solid gray;
-    color: #FFF;
-    padding: 0 1em;
-  }
-
-  a:visited {
-    color: #FFF;
-  }
-
-  a.last {
-    border-right: none;
-  }
-
-  &.main-nav {
-    form {
-      float: right;
-      padding-right: 1em;
-    }
-
-    input {
-      width: 15em;
-
-      &[type=submit] {
-        width: 5em;
-      }
-    }
-  }
-
-  &.login {
-    border-bottom: 1px solid #333;
-    position: relative;
-
-    .doc {
-      text-align: right;
-    }
-  }
-}
-
 header {
   border-bottom: 1px solid #333;
 }
