@@ -85,9 +85,11 @@
     <script type="text/javascript">
         var __CONSTANTS__ = {
             STATIC_URL: '{{ STATIC_URL }}',
+            URLS: {},
             USER_ID: '{{ user.pk }}'
         };
     </script>
+    {% block javascript_constants %}{% endblock %}
 
     <!-- JS -->
     {% block script_library %}
