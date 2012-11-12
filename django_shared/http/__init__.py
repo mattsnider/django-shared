@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from simplejson import dumps
+from django.utils import simplejson
 
 class JsonResponse(HttpResponse):
     """
@@ -19,4 +19,4 @@ def json_response(data={ }, errors=[ ], success=True):
         'errors': errors,
         'success': bool(len(errors) == 0 and success),
         })
-    return dumps(data)
+    return simplejson.dumps(data)
