@@ -1,5 +1,5 @@
 from django.forms.widgets import Input, TextInput, ClearableFileInput, \
-    CheckboxInput
+    CheckboxInput, DateInput, MultiWidget
 from django.utils.encoding import force_unicode
 from django.utils.html import escape, conditional_escape
 from django.utils.safestring import mark_safe
@@ -68,3 +68,47 @@ def as_disabled(self, attrs=None, **kwargs):
         attrs['disabled'] = 'disabled'
 
     return self.as_widget(TextInput(), attrs, **kwargs)
+
+
+class YearInput(DateInput):
+    ignore_values = (1900,)
+
+    def __init__(self, attrs=None):
+        super(YearInput, self).__init__(format='%Y', attrs=attrs)
+
+    def _format_value(self, value):
+        value = super(YearInput, self)._format_value(value)
+        if value in self.ignore_values:
+            return ''
+        return value
+
+
+class MonthInput(DateInput):
+    def __init__(self, attrs=None):
+        super(MonthInput, self).__init__(format='%m', attrs=attrs)
+
+
+class DayInput(DateInput):
+    def __init__(self, attrs=None):
+        super(DayInput, self).__init__(format='%d', attrs=attrs)
+
+
+class SplitMDYDateWidget(MultiWidget):
+    """
+    Multi-widget for splitting dates into three fields.
+    """
+    def __init__(self, attrs=None):
+        widgets = (
+            MonthInput(attrs=attrs),
+            DayInput(attrs=attrs),
+            YearInput(attrs=attrs),
+            )
+        super(SplitMDYDateWidget, self).__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value:
+            return value.month, value.day, value.year
+        return None, None, None
+
+    def format_output(self, rendered_widgets):
+        return '<span class="slash">/</span>'.join(rendered_widgets)
