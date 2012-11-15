@@ -68,14 +68,3 @@ def gzip_urlopen(url, data=None, timeout=30):
     request = urllib2.Request(url)
     opener = urllib2.build_opener(GzipHttpHandler, GzipHttpsHandler)
     return opener.open(request, data, timeout)
-
-
-def ajax_only(view_func):
-    """
-    Decorator for requests that are only supposed to handle AJAX requests.
-    """
-    def inner(request, *args, **kwargs):
-        if not request.is_ajax():
-            return HttpResponseBadRequest()
-        return view_func(request, *args, **kwargs)
-    return inner
