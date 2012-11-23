@@ -1,3 +1,15 @@
+v1.2.5, 11/14/2012
+* gzip url handler, extend urllib2.urlopen() to support gzip format
+* ajax_only view decorator
+* form widget for breaking dates into a multiwidget
+
+v1.2.4, 11/12/2012
+* removed some precompiled CSS, should use sass_to_css to generate
+* minor bug fixes
+* email login/signup
+* new abstract models
+* template block for adding JavaScript constants, prelibrary
+
 v1.2.2, 11/6/2012 -- Breaking release
 * upgraded to html5boilerplate 4.0.1
 * cleaning up the HTML scaffolding to use HTML 5 better
