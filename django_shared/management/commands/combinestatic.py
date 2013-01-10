@@ -7,6 +7,7 @@ from django.conf import settings
 class Command(BaseCommand):
     """
     Combines static files like CSS and JS as specified in the STATIC_FILE_COMBINATIONS setting.
+    You can set STATIC_FILE_COMBINATIONS to an empty dict if you don't want this command to do anything.
     """
     help = 'Combines static files like CSS and JS as specified in the STATIC_FILE_COMBINATIONS setting'
 
@@ -26,7 +27,7 @@ class Command(BaseCommand):
                 }
         """
 
-        if not getattr(settings, 'STATIC_FILE_COMBINATIONS'):
+        if getattr(settings, 'STATIC_FILE_COMBINATIONS') is None:
             raise CommandError('settings value STATIC_FILE_COMBINATIONS is required')
 
         self.stdout.write('Starting concatenation:\n')
