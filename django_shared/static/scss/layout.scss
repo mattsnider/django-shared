@@ -1,15 +1,13 @@
 /* @group general */
 
-body {
+
+.l_container {
+  margin: 0 auto; /* center in viewport */
+  overflow: hidden;
+  width: 960px;
 }
 
-#doc, .doc {
-	margin: 0 auto; /* center in viewport */
-	overflow: hidden;
-    width: 960px;
-}
-
-header {
+.l_header {
   border-bottom: 1px solid #333;
 }
 
@@ -22,22 +20,20 @@ header {
 	/*background-color: #EFEFEF;*/
 }
 
-footer {
+.l_footer {
   border-top: solid 1px #000;
-  clear: both;
-  padding-top: 1em;
 
-  .nav {
+  p {
+    padding-top: 0.5em;
     text-align: center;
   }
+}
+
+.l_footer_nav {
+  text-align: center;
 
   a {
     padding: 0.25em;
-  }
-
-  p: {
-    padding-top: 0.5em;
-    text-align: center;
   }
 }
 

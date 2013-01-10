@@ -48,7 +48,10 @@
 
 <body>
     <!--[if lt IE 7]>
-    <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <p class="chromeframe">You are using an <strong>outdated</strong> browser.
+        Please <a href="http://browsehappy.com/">upgrade your browser</a> or
+        <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a>
+        to improve your experience.</p>
     <![endif]-->
 
 	<div id="layers">
@@ -56,31 +59,19 @@
 		<div id="mask" class="dnone"></div>
 	</div>
 
-    {% block doc_wrapper_top %}{% endblock %}
+    <header class="{{ page_grid }} l_header">{% block header %}{% endblock %}</header>
 
-	<div id="doc">
-        {% block header %}
-            <header>
-                {# example HTML #}
-            </header>
-        {% endblock %}
-
-		<div id="main">
-            {% block main_nav %}{% endblock %}
-            {% if messages %}<ul class="messages">{% for message in messages %}
-                <li class="message {% if message.tags %}{{ message.tags }}{% endif %}">
-                    {{ message|safe }}</li>
-            {% endfor %}</ul>{% endif %}
-            {% block main_content %}{% endblock %}
-        </div>
-
-        {% block footer %}<footer class="clearer">
-            {# example HTML #}
-        </footer>{% endblock %}
-
+	<div class="{{ page_grid }} l_body clearfix">
+        {% block main_nav %}{% endblock %}
+        {% if messages %}<ul class="messages">{% for message in messages %}
+            <li class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message|safe }}</li>
+        {% endfor %}</ul>{% endif %}
+        <div class="l_main {{ main_grid }}">{% block main_content %}{% endblock %}</div>
+        <aside class="l_aside {{ sidebar_grid }}">{% block main_sidebar %}{% endblock %}</aside>
 	</div>
 
-    {% block doc_wrapper_bottom %}{% endblock %}
+    <footer class="{{ page_grid }} l_footer">{% block footer %}{% endblock %}</footer>
 
     <script type="text/javascript">
         var __CONSTANTS__ = {
