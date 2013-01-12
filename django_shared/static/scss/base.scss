@@ -1,40 +1,72 @@
-/* @group tags */
+@import 'mixins';
 
-h1, .h1 {
-	font-size: 16pt;
-	font-weight: bold;
-	padding-bottom: 1em;
-}
-
-h2, .h2 {
-	font-size: 15pt;
-	padding-bottom: 1em;
+.l_subheader {
+  border-bottom: 1px solid #CCC;
+  color: black;
+  font-size: 150%;;
 }
 
 h3, .h3 {
-  font-size: 13pt;
+  font-size: 150%;
   font-weight: bold;
-  margin-top: 0;
 }
 
 h4, .h4 {
-	font-size: 12pt;
-	padding-bottom: 1em;
+  font-size: 125%;
+}
+
+.dnone {
+  display: none;
+}
+
+.vhddn {
+  visibility: hidden;
+}
+
+div.spacer {
+  clear: both;
+  height: 0.5em;
+  width: 100%;
+}
+
+.expanded {
+  overflow: hidden !important;
+}
+
+a.expanded var.collapsed,
+a:not([class~=expanded]) var.expanded {
+  display: none;
+}
+
+code {
+  @include border-radius(3px);
+  background-color: #F8F8F8;
+  border: 1px solid #EAEAEA;
+  margin: 0 2px;
+  padding: 0px 5px;
+  white-space: nowrap;
 }
 
 body {
-	line-height: 1.6em;
-	text-align: left;
+  font-size: 14px;
 }
 
-a,
-p,
-label {
-	font-size: 12pt;
-	text-decoration: none;
+html,
+button,
+input,
+select,
+textarea {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
 }
 
-/* @end */
+.todo {
+  color: blue;
+
+  &:before {
+    content: "Todo: ";
+    color: blue;
+  }
+}
 
 /* `Clear Floated Elements
 ----------------------------------------------------------------------------------------------------*/
@@ -84,36 +116,3 @@ label {
 .container_16 {
   zoom: 1;
 }
-
-/* @end */
-
-/* @group misc */
-
-.dnone {
-	display: none;
-}
-
-.vhddn {
-	visibility: hidden;
-}
-
-div.spacer {
-	clear: both;
-	height: 0.5em;
-	width: 100%;
-}
-
-/* @end */
-
-/* @group toggles */
-
-.expanded {
-  overflow: hidden !important;
-}
-
-a.expanded var.collapsed,
-a:not([class~=expanded]) var.expanded {
-  display: none;
-}
-
-/* @end */
