@@ -1,11 +1,9 @@
 from optparse import make_option
 import os
 
-from django.contrib.staticfiles import finders
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.utils.importlib import import_module
-from django.utils.datastructures import SortedDict
 
 
 class Command(BaseCommand):
@@ -24,7 +22,12 @@ class Command(BaseCommand):
             choices = ('scss', 'sass'),
             help='The file extension to use, .scss or .sass'),
         make_option('-a', '--app', action='store', dest='app', default='',
-            help='The app to sassify. Default is all apps.'))
+            help='The app to sassify. Default is all apps.'),
+        make_option('--site-packages', action='store_true', dest='site-packages', default=False,
+            help='Look for sass files in site-packages as well as active project '
+                 '(not recommended, packages should ship with compiled CSS and using this '
+                 'option has been known to cause CSS discrepancies).'),
+        )
 
     def handle(self, *args, **options):
         """
@@ -32,19 +35,30 @@ class Command(BaseCommand):
         and executes Sass against them.
         """
         cmd = 'sass --update %%s:%%s --style %s --trace' % options.get('style')
+        include_site_packages = options.get('site-packages')
         file_ext = options['file_ext']
         app = options['app']
+        root_dir = getattr(settings, 'ROOT_DIR', None)
+
+        if not root_dir:
+            raise CommandError('Your project must settings.py file must define a ROOT_DIR, try\n'
+                               'ROOT_DIR = path.abspath(path.dirname(__file__))')
 
         self.stdout.write('Starting sass_to_css\n')
         for app_name in settings.INSTALLED_APPS:
             if not app or app == app_name:
                 mod = import_module(app_name)
-                self.stdout.write('Processing %s:\n' % app_name)
 
                 try:
                     # test if the scss directory exists
                     sass_path = os.path.join(
                         mod.__path__[0], 'static', file_ext)
+
+                    if not (include_site_packages or root_dir in sass_path):
+                        self.stdout.write('Ignoring %s:\n' % app_name)
+                        continue
+
+                    self.stdout.write('Processing %s:\n' % app_name)
 
                     for dirpath, dirnames, filenames in os.walk(sass_path):
                         for filename in filenames:
