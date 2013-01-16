@@ -17,34 +17,47 @@ h4, .h4 {
 
 h5, .h5 {
   font-size: 110%;
+  margin: 1em 0;
 }
 
 h6, .h6 {
-  font-color: #666;
+  color: #666;
   font-size: 100%;
+  margin: 1em 0;
 }
 
+.is-no-display,
 .dnone {
   display: none;
 }
 
-.vhddn {
-  visibility: hidden;
+.is-overflow-hidden {
+  overflow: hidden;
 }
 
-div.spacer {
-  clear: both;
-  height: 0.5em;
-  width: 100%;
-}
-
-.expanded {
-  overflow: hidden !important;
-}
-
-a.expanded var.collapsed,
-a:not([class~=expanded]) var.expanded {
+.is-state-a var.is-state-b,
+.is-state-b var.is-state-a {
   display: none;
+}
+
+.padding-1em {
+  padding: 1em;
+}
+
+.block {
+  display: block;
+}
+
+.small {
+  font-size: 75%;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+.em {
+  font-style: italic;
 }
 
 code {
