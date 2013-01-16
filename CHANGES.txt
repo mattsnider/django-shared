@@ -1,3 +1,6 @@
+v1.3.4, 01/16/2013
+* adding the memoized_property function to django_shared/models.py
+
 v1.3.3, 01/16/2013
 * adding error page views and urls to django_shared, we already had the templates
 * adding maintenance page
