@@ -144,7 +144,7 @@
             <h1>Something is broken <span>:(</span></h1>
             <p>Sorry, but the page you trying to view has an unexpected server error.</p>
             {% if settings.ERROR_EMAIL %}
-            <p>Please let <a href="mailto:{{ settings.ERROR_EMAIL }}?subject=500%20error&body={{ request.get_full_path|escape }}">email</a> us about it.</p>
+            <p>Please <a href="mailto:{{ settings.ERROR_EMAIL }}?subject=500%20error&body={{ request.get_full_path|escape }}">let us know</a>.</p>
             {% endif %}
             <script>
                 var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),GOOG_FIXURL_SITE = location.host;
