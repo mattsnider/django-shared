@@ -1,4 +1,4 @@
-<!DOCTYPE html>{% load media_tags %}
+<!DOCTYPE html>{% load common media_tags %}
 {% load url from future %}
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -92,6 +92,8 @@
 
     {% include 'django_shared/ga.html' %}
     {% block extra_scripts %}{% endblock %}
+
+    {% render_deferred_html %}
 
 </body>
 </html>

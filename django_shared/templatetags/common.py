@@ -3,10 +3,63 @@ import re
 from classytags.arguments import Argument
 from classytags.core import Options, Tag
 from django import template
+from django.conf import settings
 from django.utils.encoding import smart_unicode, smart_str
 from django.utils.timesince import timesince
 
 register = template.Library()
+defer_html_queue = []
+
+
+class AsyncScript(Tag):
+    name = "async_script"
+
+    options = Options(
+        Argument("path"),
+        Argument("appendStatic", default=True, required=False),
+    )
+
+    def render_tag(self, context, **kwargs):
+        """
+        Renders HTML to include a JavaScript file asynchronously.
+        The content of the file is downloaded immediately, but it isn't
+        processed until the UI thread is idle.
+        """
+        path = kwargs["path"]
+
+        if kwargs["appendStatic"]:
+            path = "%s%s" % (settings.STATIC_URL, path)
+
+        return ("<script>(function(d) {"
+                "var el = d.createElement('script'),"
+                "elScript = d.getElementsByTagName('script')[0];"
+                "el.type = 'text/javascript';"
+                "el.async = true;"
+                "el.src = '%s';"
+                "elScript.parentNode.insertBefore(el, elScript);" +
+                "}(document));</script>") % path
+register.tag(AsyncScript)
+
+
+class DeferHTML(Tag):
+    name = "defer_html"
+
+    options = Options(
+        blocks=[('end_defer_html', 'nodelist')]
+    )
+
+    def render_tag(self, context, **kwargs):
+        """
+        Any HTML inside this tag will be queued and rendered at the
+        end of the document. This is particularly useful for JavaScript tags.
+        The HTML stored here will need to be rendered by call
+        RenderDeferredHTML. This is done automatically in base.html.
+        """
+        global defer_html_queue
+        defer_html_queue.append(
+            "".join([o.render(context) for o in kwargs.get('nodelist')]))
+        return ""
+register.tag(DeferHTML)
 
 
 def improved_timesince(date):
@@ -94,6 +147,20 @@ def regex(regex, replace, value):
     return smart_unicode(
         re.sub(regex, replace, smart_str(value), flags=re.UNICODE)
     )
+
+
+class RenderDeferredHTML(Tag):
+    name = "render_deferred_html"
+
+    def render_tag(self, context, **kwargs):
+        """
+        Render all HTML that has been deferred by DeferHTML.
+        """
+        global defer_html_queue
+        tmp = "".join(defer_html_queue)
+        defer_html_queue = []
+        return tmp
+register.tag(RenderDeferredHTML)
 
 
 class SetVarNode(template.Node):
