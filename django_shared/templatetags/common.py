@@ -13,11 +13,28 @@ defer_html_queue = []
 
 class AsyncScript(Tag):
     name = "async_script"
+    HTML = ("<script>(function(d) {"
+            "var el = d.createElement('script'),"
+            "elScript = d.getElementsByTagName('script')[0];"
+            "el.type = 'text/javascript';"
+            "el.async = true;"
+            "el.src = '%s';"
+            "elScript.parentNode.insertBefore(el, elScript);" +
+            "}(document));</script>")
 
     options = Options(
         Argument("path"),
         Argument("appendStatic", default=True, required=False),
     )
+
+    @staticmethod
+    def render_script(context, **kwargs):
+        path = kwargs["path"]
+
+        if kwargs["appendStatic"]:
+            path = "%s%s" % (settings.STATIC_URL, path)
+
+        return AsyncScript.HTML % path
 
     def render_tag(self, context, **kwargs):
         """
@@ -25,19 +42,7 @@ class AsyncScript(Tag):
         The content of the file is downloaded immediately, but it isn't
         processed until the UI thread is idle.
         """
-        path = kwargs["path"]
-
-        if kwargs["appendStatic"]:
-            path = "%s%s" % (settings.STATIC_URL, path)
-
-        return ("<script>(function(d) {"
-                "var el = d.createElement('script'),"
-                "elScript = d.getElementsByTagName('script')[0];"
-                "el.type = 'text/javascript';"
-                "el.async = true;"
-                "el.src = '%s';"
-                "elScript.parentNode.insertBefore(el, elScript);" +
-                "}(document));</script>") % path
+        return AsyncScript.render_script(context, **kwargs)
 register.tag(AsyncScript)
 
 
@@ -60,6 +65,24 @@ class DeferHTML(Tag):
             "".join([o.render(context) for o in kwargs.get('nodelist')]))
         return ""
 register.tag(DeferHTML)
+
+
+class DeferScript(Tag):
+    name = "defer_script"
+
+    options = AsyncScript.options
+
+    def render_tag(self, context, **kwargs):
+        """
+        Any HTML inside this tag will be queued and rendered at the
+        end of the document. This is particularly useful for JavaScript tags.
+        The HTML stored here will need to be rendered by call
+        RenderDeferredHTML. This is done automatically in base.html.
+        """
+        global defer_html_queue
+        defer_html_queue.append(AsyncScript.render_script(context, **kwargs))
+        return ""
+register.tag(DeferScript)
 
 
 def improved_timesince(date):

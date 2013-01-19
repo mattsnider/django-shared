@@ -1,7 +1,8 @@
 v1.3.6, 01/19/2013
-* adding two new templatetags: async_script and defer_html
+* adding three new templatetags: async_script, defer_html, and defer_script
 * async_script - renders remote scripts a non-blocking way
 * defer_html - defers the HTML until the end of the page, best used with inline script blocks
+* defer_script - combines the two tags above, rendering a non-blocking script at the end of the page
 
 v1.3.5, 01/18/2013
 * adding support for GOOGLE_ANALYTICS_SITE_SPEED_SAMPLE_RATE in ga.html
