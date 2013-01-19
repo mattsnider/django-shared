@@ -21,9 +21,11 @@
     {% endif %}
 
     <!-- CSS -->
+    {% block default_css %}
     <link rel="stylesheet" href="{{ STATIC_URL }}css/libs/normalize.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/libs/main.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/global.css" />
+    {% endblock %}
 
     <!--[if lt IE 8]>
     <link href="{{ STATIC_URL }}css/iehacks.css" rel="stylesheet" type="text/css"/>
@@ -36,9 +38,9 @@
 
     {% block extra_head %}{% endblock %}
 
-    <script src="{{ STATIC_URL }}js/libs/vendor/modernizr-2.6.2.min.js"></script>
-
     {% block extra_styles %}{% endblock %}
+
+    <script src="{{ STATIC_URL }}js/libs/vendor/modernizr-2.6.2.min.js"></script>
 
     <link href="{{ STATIC_URL }}img/icon/favicon.ico" rel="icon"
           type="image/x-icon "/>
@@ -87,7 +89,6 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/libs/vendor/jquery-1.8.2.min.js"><\/script>')</script>
     <script src="{{ STATIC_URL }}js/libs/plugins.js"></script>
-    <script src="{{ STATIC_URL }}js/libs/main.js"></script>
     {% endblock %}
 
     {% include 'django_shared/ga.html' %}
