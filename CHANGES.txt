@@ -1,5 +1,6 @@
 v1.3.7, 01/22/2013
 * adding a static file finder that actually checks the STATIC_ROOT
+* removing combinestatic management command. there is a better implementation in django-pipeline
 
 v1.3.6, 01/19/2013
 * adding three new templatetags: async_script, defer_html, and defer_script
