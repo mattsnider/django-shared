@@ -1,3 +1,6 @@
+v1.3.7, 01/22/2013
+* adding a static file finder that actually checks the STATIC_ROOT
+
 v1.3.6, 01/19/2013
 * adding three new templatetags: async_script, defer_html, and defer_script
 * async_script - renders remote scripts a non-blocking way
