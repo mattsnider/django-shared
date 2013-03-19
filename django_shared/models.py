@@ -48,7 +48,8 @@ class ModelBase(models.Model):
 
     SERIALIZATION_FORMAT_JSON = 'json'
     SERIALIZATION_FORMAT_XML = 'xml'
-    SERIALIZATION_FORMATS = (SERIALIZATION_FORMAT_JSON, SERIALIZATION_FORMAT_XML,)
+    SERIALIZATION_FORMATS = (
+        SERIALIZATION_FORMAT_JSON, SERIALIZATION_FORMAT_XML,)
 
     class Meta:
         abstract = True
@@ -97,7 +98,8 @@ class MyJSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):
         if hasattr(obj, 'isoformat'):
             return obj.isoformat()
-        raise TypeError('Object of type %s with value of %s is not JSON serializable' % (type(obj), repr(obj)))
+        raise TypeError('Object of type %s with value of %s is not '
+                        'JSON serializable' % (type(obj), repr(obj)))
 
 
 class ModelDataBase(ModelBase):
