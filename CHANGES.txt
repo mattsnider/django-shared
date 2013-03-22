@@ -1,3 +1,6 @@
+v1.3.9, 03/22/2013
+* upload_to_s3 breaks under Django 1.4+ directory structure, this checkin removes unnecessary normalization code
+
 v1.3.8, 03/19/2013
 * adding startup.py to handle loading modules and autodiscover on Django startup
 

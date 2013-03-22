@@ -36,13 +36,11 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        """
-        """
         self.CONN = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         files = self.listFiles(settings.STATIC_ROOT)
 
-        for file in files:
-            filename = re.sub(settings.ROOT_DIR + '/', '', os.path.normpath(file))
+        for filename in files:
+            filename = os.path.normpath(filename)
             if filename == '.' or not os.path.isfile(filename):
                 continue
 
