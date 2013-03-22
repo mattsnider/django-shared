@@ -40,8 +40,7 @@ class Command(BaseCommand):
         files = self.listFiles(settings.STATIC_ROOT)
 
         for filename in files:
-            filename = os.path.join('static', re.sub(
-                settings.STATIC_ROOT, '', os.path.normpath(filename)))
+            filename = os.path.normpath(filename)
             if filename == '.' or not os.path.isfile(filename):
                 continue
 
@@ -59,7 +58,7 @@ class Command(BaseCommand):
             return # Skip this, because it's not a file.
 
         k = Key(self.CONN.get_bucket(BUCKET_NAME))
-        k.key = filename
+        k.key = '/static%s' % filename
         if k.exists():
             k.open_read()
             last_modified_time_on_s3 = datetime.strptime(k.last_modified[5:], '%d %b %Y %H:%M:%S GMT')
