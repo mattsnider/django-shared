@@ -40,7 +40,8 @@ class Command(BaseCommand):
         files = self.listFiles(settings.STATIC_ROOT)
 
         for filename in files:
-            filename = os.path.normpath(filename)
+            filename = os.path.join('static', re.sub(
+                settings.STATIC_ROOT, '', os.path.normpath(filename)))
             if filename == '.' or not os.path.isfile(filename):
                 continue
 
