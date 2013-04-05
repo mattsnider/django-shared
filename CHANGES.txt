@@ -1,3 +1,6 @@
+v1.3.10, 04/05/2013
+* adding new management command purge_cached_url to allow selective purging of pages that are cached in Django
+
 v1.3.9, 03/22/2013
 * upload_to_s3 breaks under Django 1.4+ directory structure, this checkin removes unnecessary normalization code
 
