@@ -31,16 +31,18 @@ class Command(BaseCommand):
     help = 'Uploads static files to S3'
 
     option_list = BaseCommand.option_list + (
-#        make_option('-c', '--compress', action='store_true', dest='compress', default=False,
-#            help='Compression can be turned on via your settings, or set to True by this option'),
-        )
+    #        make_option('-c', '--compress', action='store_true', dest='compress', default=False,
+    #            help='Compression can be turned on via your settings, or set to True by this option'),
+    )
 
     def handle(self, *args, **options):
+        """
+        """
         self.CONN = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
         files = self.listFiles(settings.STATIC_ROOT)
 
-        for filename in files:
-            filename = os.path.normpath(filename)
+        for file in files:
+            filename = re.sub(settings.ROOT_DIR + '/', '', os.path.normpath(file))
             if filename == '.' or not os.path.isfile(filename):
                 continue
 
@@ -58,8 +60,7 @@ class Command(BaseCommand):
             return # Skip this, because it's not a file.
 
         k = Key(self.CONN.get_bucket(BUCKET_NAME))
-        k.key = '/static%s' % re.sub(
-            settings.STATIC_ROOT, '', filename)
+        k.key = filename
         if k.exists():
             k.open_read()
             last_modified_time_on_s3 = datetime.strptime(k.last_modified[5:], '%d %b %Y %H:%M:%S GMT')
