@@ -38,33 +38,31 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """
         """
-        self.CONN = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
-        files = self.listFiles(settings.STATIC_ROOT)
+        self.CONN = S3Connection(
+            settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
 
-        for file in files:
-            filename = re.sub(settings.ROOT_DIR + '/', '', os.path.normpath(file))
-            if filename == '.' or not os.path.isfile(filename):
-                continue
+        for file in self.listFiles():
+            filename = os.path.normpath(file)
+            filekey = re.sub(settings.ROOT_DIR + '/', '', filename)
 
             # don't send to S3 if not updated in the last 12 hours.
             stat = os.stat(filename)
             if time.time() - stat.st_mtime < STALE_STATIC_ASSET_SECONDS:
-                self.file_to_s3(filename)
+                self.file_to_s3(filekey, filename)
 
-    def file_to_s3(self, filename):
+    def file_to_s3(self, filekey, filename):
         """
-        Uploads a filename to s3, making sure it really is a file etc. Also checks if file on disk is newer or not.
-        YUI files must be manually uploaded
+        Uploads a filename to s3 and checks if file on disk is newer or not.
         """
-        if filename == '.' or not os.path.isfile(filename) or '/yui/' in filename:
-            return # Skip this, because it's not a file.
-
         k = Key(self.CONN.get_bucket(BUCKET_NAME))
-        k.key = filename
+        k.key = filekey
+
         if k.exists():
             k.open_read()
-            last_modified_time_on_s3 = datetime.strptime(k.last_modified[5:], '%d %b %Y %H:%M:%S GMT')
-            last_modified_time_on_disk = datetime.fromtimestamp(os.path.getmtime(filename))
+            last_modified_time_on_s3 = datetime.strptime(
+                k.last_modified[5:], '%d %b %Y %H:%M:%S GMT')
+            last_modified_time_on_disk = datetime.fromtimestamp(
+                os.path.getmtime(filename))
 
             if last_modified_time_on_s3 > last_modified_time_on_disk:
                 print 'Skipping %s' % filename
@@ -75,25 +73,19 @@ class Command(BaseCommand):
         f = open(filename, 'rb')
         filedata = f.read()
         f.close()
-        self.save_key_value(filename, filedata, True)
+        self.save_key_value(filekey, filedata, True)
 
-    def listFiles(self, dir):
-        basedir = dir
-        files = []
-        subdirlist = []
+    def listFiles(self):
+        """
+        Creates a list of all files in the STATIC_ROOT directory. The values in the
+        list will be the absolute path.
+        """
+        all_files = []
 
-        for item in os.listdir(dir):
-            item = os.path.join(basedir, item)
+        for root, dirs, files in os.walk(settings.STATIC_ROOT):
+            all_files.extend(list('%s/%s' % (root, file) for file in files))
 
-            if os.path.isfile(item):
-                files.append(item)
-            else:
-                subdirlist.append(item)
-
-        for subdir in subdirlist:
-            files.extend(self.listFiles(subdir))
-
-        return files
+        return all_files
 
     def save_key_value(self, filename, filedata, gzip_flag = False):
         """key being filename and value is the data. Sets the headers based on content type and far futures expires headers"""
