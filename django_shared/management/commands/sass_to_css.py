@@ -108,7 +108,7 @@ class Command(BaseCommand):
                             path, real_app_name, mod_path, file_ext)
 
                         if sass_path:
-                            continue
+                            break
 
                 # did not find an available directory for sass, skip this app
                 if not sass_path:
