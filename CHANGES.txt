@@ -1,3 +1,7 @@
+v1.3.14, 11/26/2013
+* improving custom email backend
+* improving sass_to_css
+
 v1.3.13, 09/20/2013
 * adding after_block block
 
