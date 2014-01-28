@@ -1,6 +1,7 @@
 v1.3.15, 01/28/2014
 * removing reference to simplejson and using json module
 * improving sass_to_css to automatically find Sass files, no matter where they are
+* replacing the json module broke pickling of forms, so adding logic to send the form class as a string
 
 v1.3.14, 11/26/2013
 * improving custom email backend

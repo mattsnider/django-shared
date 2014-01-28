@@ -2,9 +2,10 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext, ugettext_lazy as _
-
+from django.utils.translation import ugettext_lazy as _
 from validators import validate_format
+
+from django_shared.utils.misc import class_from_str
 
 
 class FormMixin(object):
@@ -24,13 +25,15 @@ class FormMixin(object):
         """
         Returns a pickleable version of the form.
         """
-        return self.__class__, self.data
+        return self.__class__.__module__, self.__class__.__name__, self.data
 
     @staticmethod
-    def unpickle_from_request(form_class, data, form_args=()):
+    def unpickle_from_request(mod_name, form_class_name, data, form_args=()):
         """
-        Returns an instance of the form with initial data form the pickled tuple.
+        Returns an instance of the form with initial data form the
+        pickled tuple.
         """
+        form_class = class_from_str(mod_name, form_class_name)
         form = form_class(*form_args, data=data)
         form.is_valid()
         return form
