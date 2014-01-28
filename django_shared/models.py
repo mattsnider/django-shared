@@ -1,9 +1,10 @@
 from datetime import datetime
-from django.contrib.contenttypes.models import ContentType
+import json
 
+from django.contrib.contenttypes.models import ContentType
 from django.core import serializers
+from django.core.serializers.json import DateTimeAwareJSONEncoder
 from django.db import models
-from django.utils import simplejson
 
 
 def keyify(content_type_pk, pk):
@@ -92,16 +93,6 @@ class ModelBase(models.Model):
         return u"%s" % self.id
 
 
-class MyJSONEncoder(simplejson.JSONEncoder):
-    """JSON encoder which understands datetimes."""
-
-    def default(self, obj):
-        if hasattr(obj, 'isoformat'):
-            return obj.isoformat()
-        raise TypeError('Object of type %s with value of %s is not '
-                        'JSON serializable' % (type(obj), repr(obj)))
-
-
 class ModelDataBase(ModelBase):
     """
     This is the model to extend for storing blobs of data.
@@ -132,11 +123,11 @@ class ModelJsonBase(ModelDataBase):
     """
     def set_data(self, data):
         super(ModelJsonBase, self).set_data(
-            u'%s' % simplejson.dumps(
-                data, cls=MyJSONEncoder, encoding='UTF-8'))
+            u'%s' % json.dumps(
+                data, cls=DateTimeAwareJSONEncoder, encoding='UTF-8'))
 
     def get_data(self):
-        return simplejson.loads(super(ModelJsonBase, self).get_data())
+        return json.loads(super(ModelJsonBase, self).get_data())
 
     data = property(get_data, set_data)
 
@@ -144,4 +135,4 @@ class ModelJsonBase(ModelDataBase):
         abstract = True
 
     def pretty_data(self):
-        return simplejson.dumps(self.data, indent=4)
+        return json.dumps(self.data, indent=4)

@@ -8,27 +8,18 @@ from django.utils.importlib import import_module
 
 class Command(BaseCommand):
     """
-    Run Sass against all files. By default it will search in /static/scss/ and
-    /static/%(app_name)s/scss/, but it can also look into /static/sass/ and
-    /static/%(app_name)s/sass/.
+    Run Sass against all files. It will search the static directory of each
+    app from Sass files and copy them into CSS files in a 'css' directory
+    at the same level, so if Sass files are located at:
+
+    /static/%(app_name)s/scss/
+
+    Then the CSS files will be created at:
+
+    /static/%(app_name)s/css/
 
     For more details on SASS see:
         http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html
-
-    You can set a custom SASS_TO_CSS_PATH in your settings files that will
-    determine where the application will look for your sass files. The
-    command will attempt to replace string variables:
-
-        '%(mod_path)s' - the module root directory
-        '%(app_name)s' - the application name
-        '%(file_ext)s' - the file extension (scss or sass)
-
-        The two default sass_path strings are:
-        os.path.join('%(mod_path)s', 'static', '%(file_ext)s')
-        os.path.join('%(mod_path)s', 'static', '%(app_name)s', '%(file_ext)s')
-
-        If you define SASS_TO_CSS_PATH, then this command will only search
-        in that directory and will not check the default two paths.
     """
     help = 'Run Sass against all related files.'
 
@@ -37,103 +28,108 @@ class Command(BaseCommand):
         os.path.join('%(mod_path)s', 'static', '%(app_name)s', '%(file_ext)s'))
 
     option_list = BaseCommand.option_list + (
-        make_option('-s', '--style', action='store', dest='style', default='compressed',
+        make_option('-s', '--style', action='store', dest='style',
+            default='compressed',
             choices = ('nested', 'expanded', 'compact', 'compressed'),
             help='SaSS style options'),
-        make_option('--file_ext', action='store', dest='file_ext', default='scss',
+        make_option('--file_ext', action='store', dest='file_ext',
+            default='scss',
             choices = ('scss', 'sass'),
             help='The file extension to use, .scss or .sass'),
         make_option('-a', '--app', action='store', dest='app', default='',
             help='The app to sassify. Default is all apps.'),
-        make_option('--site-packages', action='store_true', dest='site-packages', default=False,
-            help='Look for sass files in site-packages as well as active project '
-                 '(not recommended, packages should ship with compiled CSS and using this '
-                 'option has been known to cause CSS discrepancies).'),
+        make_option('--site-packages', action='store_true',
+            dest='site-packages', default=False,
+            help='Look for sass files in site-packages as well as active '
+                 'project (not recommended, packages should ship with compiled '
+                 'CSS and using this option has been known to cause CSS '
+                 'discrepancies).'),
         )
+
+    def _get_base_dir(self):
+        """
+        Fetches the BASE_DIR. Also looks for the ROOT_DIR, as that is the
+        deprecated settings variable that has been replaced.
+        """
+        base_dir = (getattr(settings, 'BASE_DIR', None) or
+                    getattr(settings, 'ROOT_DIR', None))
+
+        if not base_dir:
+            raise CommandError(
+                'Your project must settings.py file must define a BASE_DIR,'
+                'try: BASE_DIR = os.path.dirname(os.path.dirname(__file__))')
+        return base_dir
 
     def handle(self, *args, **options):
         """
         Searches each app for static/(scss|sass)/filename.(scss|sass) files
         and executes Sass against them.
         """
-        root_dir = getattr(settings, 'ROOT_DIR', None)
-
-        if not root_dir:
-            raise CommandError(
-                'Your project must settings.py file must define a ROOT_DIR,'
-                'try\nROOT_DIR = path.abspath(path.dirname(__file__))')
-
         self.stdout.write('Starting sass_to_css\n')
         self.run_sass(options)
         self.stdout.write('Completed sass_to_css!\n')
 
-    def get_sass_path(self, sass_path, app_name, mod_path, file_ext):
+    def _find_sass_files(self, app_path, file_ext):
         """
-        Creates the sass_path and checks that the directory exists.
+        Searches the app for sass files and returns the list of them.
         """
-        sass_path = sass_path % {
-            'mod_path': mod_path,
-            'app_name': app_name,
-            'file_ext': file_ext,}
+        sass_files = []
 
-        return sass_path if os.path.exists(sass_path) else None
+        # find all the matching SaSS files (default extension is .scss)
+        for root, dirs, files in os.walk(os.path.join(
+                app_path, settings.STATIC_ROOT)):
+            for file in files:
+                if file.endswith(file_ext):
+                    sass_files.append(os.path.join(root, file))
+        return sass_files
 
     def run_sass(self, options):
         """
         Iterate through the apps and process the sass files.
         """
-        root_dir = getattr(settings, 'ROOT_DIR', None)
-        settings_sass_path = getattr(settings, 'SASS_TO_CSS_PATH', None)
+        base_dir = self._get_base_dir()
 
         cmd = 'sass --update %%s:%%s --style %s --trace' % options.get('style')
         include_site_packages = options.get('site-packages')
-        file_ext = options['file_ext']
+        file_ext = '.%s' % options['file_ext']
         app = options['app']
 
         for app_name in settings.INSTALLED_APPS:
+            # do all apps, or just the one specified
             if not app or app == app_name:
+                # get the path of the app
                 mod = import_module(app_name)
-                mod_path = mod.__path__[0]
-                real_app_name = app_name.split('.')[-1]
+                app_path = mod.__path__[0]
 
-                if not (include_site_packages or root_dir in mod_path):
+                # only search site-packages apps if the option is true
+                if not (include_site_packages or base_dir in app_path):
                     self.stdout.write('Invalid - Ignoring %s:\n' % app_name)
 
-                if settings_sass_path:
-                    sass_path = self.get_sass_path(
-                        settings_sass_path, real_app_name, mod_path, file_ext)
-                else:
-                    for path in Command.DEFAULT_SASS_PATHS:
-                        sass_path = self.get_sass_path(
-                            path, real_app_name, mod_path, file_ext)
+                sass_files = self._find_sass_files(app_path, file_ext)
 
-                        if sass_path:
-                            break
-
-                # did not find an available directory for sass, skip this app
-                if not sass_path:
-                    self.stdout.write('No SaSS - Skipping %s:\n' % app_name)
+                # did not find any sass files, skip this app
+                if not sass_files:
+                    self.stdout.write('No SaSS - Skipping app: %s\n' % app_name)
                     continue
 
                 try:
                     self.stdout.write('Processing %s:\n' % app_name)
 
-                    for dirpath, dirnames, filenames in os.walk(sass_path):
-                        for filename in filenames:
-                            if '.%s' % file_ext not in filename:
-                                continue
-                                # read data from file
-                            from_file = os.path.join(dirpath, filename)
+                    # iterate over the sass files and process them.
+                    for from_file in sass_files:
+                        # replacing extension and last directory name
+                        t = os.path.split(from_file)
+                        l = [None, 'css', None]
+                        l[2] = t[1].replace(file_ext, '.css')
+                        l[0] = os.path.split(t[0])[0]
 
-                            # write data to file
-                            to_file = os.path.join(
-                                dirpath.replace(file_ext, 'css'),
-                                filename.replace(file_ext, 'css'))
+                        # write data to file
+                        to_file = os.path.join(*l)
 
-                            # sassify
-                            os.system(cmd % (from_file, to_file,))
+                        # sassify
+                        os.system(cmd % (from_file, to_file,))
 
-                            self.stdout.write('Process %s to %s:\n' % (
-                                from_file, to_file,))
+                        self.stdout.write('Process %s to %s:\n' % (
+                            from_file, to_file,))
                 except IOError:
                     pass
