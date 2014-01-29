@@ -41,9 +41,12 @@ class Command(BaseCommand):
         self.CONN = S3Connection(
             settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
 
+        base_dir = (getattr(settings, 'BASE_DIR', None) or
+                    getattr(settings, 'ROOT_DIR', None))
+
         for file in self.listFiles():
             filename = os.path.normpath(file)
-            filekey = re.sub(settings.ROOT_DIR + '/', '', filename)
+            filekey = re.sub(base_dir + '/', '', filename)
 
             # don't send to S3 if not updated in the last 12 hours.
             stat = os.stat(filename)
