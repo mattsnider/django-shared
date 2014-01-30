@@ -31,8 +31,10 @@ class Command(BaseCommand):
     help = 'Uploads static files to S3'
 
     option_list = BaseCommand.option_list + (
-    #        make_option('-c', '--compress', action='store_true', dest='compress', default=False,
-    #            help='Compression can be turned on via your settings, or set to True by this option'),
+        make_option('-x', '--exclude', action='store', dest='exclude',
+            default=None,
+            help='A comma separated list of extensions to exclude '
+                 '(eg. --exclude=scss,sass,txt)'),
     )
 
     def handle(self, *args, **options):
@@ -44,7 +46,7 @@ class Command(BaseCommand):
         base_dir = (getattr(settings, 'BASE_DIR', None) or
                     getattr(settings, 'ROOT_DIR', None))
 
-        for file in self.listFiles():
+        for file in self.listFiles(options.get('exclude')):
             filename = os.path.normpath(file)
             filekey = re.sub(base_dir + '/', '', filename)
 
@@ -78,15 +80,23 @@ class Command(BaseCommand):
         f.close()
         self.save_key_value(filekey, filedata, True)
 
-    def listFiles(self):
+    def listFiles(self, exclude):
         """
         Creates a list of all files in the STATIC_ROOT directory. The values in the
         list will be the absolute path.
         """
+        excluded_extensions = exclude.split(',') if exclude else None
         all_files = []
 
+        # walk the static root directory
         for root, dirs, files in os.walk(settings.STATIC_ROOT):
-            all_files.extend(list('%s/%s' % (root, file) for file in files))
+            # iterate over the files in each directory
+            for file in files:
+                # if there are no excluded extensions or if the extension is
+                # not in the excluded list, then add it to the file list
+                if (not excluded_extensions or os.path.splitext(file)[1]
+                    not in excluded_extensions):
+                    all_files.append('%s/%s' % (root, file))
 
         return all_files
 
