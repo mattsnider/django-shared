@@ -38,6 +38,8 @@ class Command(BaseCommand):
             help='The file extension to use, .scss or .sass'),
         make_option('-a', '--app', action='store', dest='app', default='',
             help='The app to sassify. Default is all apps.'),
+        make_option('-I', '--load-path', action='store',
+            dest='load-path', default=None, help='Add a sass import path.'),
         make_option('--site-packages', action='store_true',
             dest='site-packages', default=False,
             help='Look for sass files in site-packages as well as active '
@@ -75,9 +77,10 @@ class Command(BaseCommand):
         """
         sass_files = []
 
+        static_path = settings.STATIC_ROOT.replace(self._get_base_dir(), '')
+
         # find all the matching SaSS files (default extension is .scss)
-        for root, dirs, files in os.walk(os.path.join(
-                app_path, settings.STATIC_ROOT)):
+        for root, dirs, files in os.walk('%s%s' % (app_path, static_path)):
             for file in files:
                 if file.endswith(file_ext):
                     sass_files.append(os.path.join(root, file))
@@ -88,8 +91,14 @@ class Command(BaseCommand):
         Iterate through the apps and process the sass files.
         """
         base_dir = self._get_base_dir()
+        loadPath = options['load-path']
 
         cmd = 'sass --update %%s:%%s --style %s --trace' % options.get('style')
+
+        # add an optional load path for relative imports
+        if loadPath:
+            cmd += ' -I %s' % loadPath
+
         include_site_packages = options.get('site-packages')
         file_ext = '.%s' % options['file_ext']
         app = options['app']

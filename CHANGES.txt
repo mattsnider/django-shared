@@ -1,3 +1,6 @@
+v1.3.16, 01/29/2014
+* fixing bug with the directory walking. it was processing /static instead of /app_name/static
+
 v1.3.15, 01/28/2014
 * removing reference to simplejson and using json module
 * improving sass_to_css to automatically find Sass files, no matter where they are
