@@ -94,7 +94,7 @@ class Command(BaseCommand):
             for file in files:
                 # if there are no excluded extensions or if the extension is
                 # not in the excluded list, then add it to the file list
-                if (not excluded_extensions or os.path.splitext(file)[1]
+                if (not excluded_extensions or os.path.splitext(file)[1][1:]
                     not in excluded_extensions):
                     all_files.append('%s/%s' % (root, file))
 
