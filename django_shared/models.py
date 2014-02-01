@@ -83,11 +83,26 @@ class ModelBase(models.Model):
     def serialize(self, format='json'):
         return serializers.serialize(format, [self])
 
-    def to_json(self):
-        return {
-            'create_ts': '%s' % self.create_ts,
-            'modify_ts': '%s' % self.modify_ts,
-        }
+    def to_json(self, exclude=[], include=[]):
+        """
+        Returns a JSON representation of this model.
+        This may not be the best way to do this, and could potentially
+        have security issues with passwords and stuff, so use with care.
+        """
+        field_names = include or self._meta.get_all_field_names()
+        # filter the list of fields names to only the include set
+        if exclude:
+            field_names = set(field_names).difference(exclude)
+
+        ret = {}
+
+        for field_name in field_names:
+            val = getattr(self, field_name)
+
+            if val is not None:
+                ret[field_name] = unicode(val)
+
+        return ret
 
     def __unicode__(self):
         return u"%s" % self.id
