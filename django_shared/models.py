@@ -83,7 +83,7 @@ class ModelBase(models.Model):
     def serialize(self, format='json'):
         return serializers.serialize(format, [self])
 
-    def to_json(self, exclude=[], include=[]):
+    def to_json(self, exclude=None, include=None, manytomany=False):
         """
         Returns a JSON representation of this model.
         This may not be the best way to do this, and could potentially
@@ -97,8 +97,18 @@ class ModelBase(models.Model):
         ret = {}
 
         for field_name in field_names:
-            val = getattr(self, field_name)
+            val = getattr(self, field_name, None)
 
+            # get the ManyToMany relationships as well
+            if manytomany and 'ManyRelatedManager' in str(val.__class__):
+                l = []
+
+                for o in getattr(self, field_name).all():
+                    l.append(o.to_json(exclude=exclude, include=include))
+
+                val = l if len(l) else None
+
+            # only return non-None values
             if val is not None:
                 ret[field_name] = unicode(val)
 
