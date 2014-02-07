@@ -106,10 +106,10 @@ class ModelBase(models.Model):
                 for o in getattr(self, field_name).all():
                     l.append(o.to_json(exclude=exclude, include=include))
 
-                val = l if len(l) else None
-
+                if len(l):
+                    ret[field_name] = l
             # only return non-None values
-            if val is not None:
+            elif val is not None:
                 ret[field_name] = unicode(val)
 
         return ret
